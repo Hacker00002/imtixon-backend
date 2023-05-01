@@ -5,7 +5,7 @@ const products = {
     try {
       const subcategory = read("products");
       const { sub_category_id, model } = req.query;
-      if (req.query.sub_category_id) {
+      if (req.query.sub_category_id && !req.query.model) {
         const filter = subcategory.filter(
           (user) => user.sub_category_id == sub_category_id
         );
@@ -19,11 +19,14 @@ const products = {
         res.end(JSON.stringify(filterbymodel));
       }
 
-      const filterbynamecategory = subcategory.filter(
-        (user) => user.sub_category_id == sub_category_id && user.model == model
-      );
-      res.writeHead(201, { "Content-Type": "application/json" });
-      res.end(JSON.stringify(filterbynamecategory));
+      if (req.query.sub_category_id && req.query.model) {
+        const filterbynamecategory = subcategory.filter(
+          (user) =>
+            user.sub_category_id == sub_category_id && user.model == model
+        );
+        res.writeHead(201, { "Content-Type": "application/json" });
+        res.end(JSON.stringify(filterbynamecategory));
+      }
     } catch (error) {
       res.json(400, { status: 400, message: error.message });
     }
