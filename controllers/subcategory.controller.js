@@ -18,7 +18,7 @@ const subcategories = {
       res.end(JSON.stringify({ result }));
     } catch (error) {
       res.writeHead(400, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({ result }));
+      res.json(400, { status: 400, message: error.message });
     }
   },
   POST: async (req, res) => {
@@ -36,7 +36,7 @@ const subcategories = {
       res.end(JSON.stringify({ status: 201, message: true }));
     } catch (error) {
       res.writeHead(400, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({ status: 400, message: error.message }));
+      res.json(400, { status: 400, message: error.message });
     }
   },
   PUT: async (req, res) => {
@@ -51,7 +51,23 @@ const subcategories = {
       write("subcategories", putcategory);
     } catch (error) {
       res.writeHead(400, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({ status: 400, message: error.message }));
+      res.json(400, { status: 400, message: error.message });
+    }
+  },
+  DELETE: async (req, res) => {
+    try {
+      const { sub_category_id } = await req.body;
+
+      const categories = read("subcategories");
+      const categoriesDel = categories.filter(
+        (item) => item.sub_category_id != sub_category_id
+      );
+
+      console.log(categories);
+      write("subcategories", categoriesDel);
+      res.json(204, { status: 204, success: true });
+    } catch (error) {
+      res.json(400, { status: 400, message: error.message });
     }
   },
 };

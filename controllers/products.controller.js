@@ -2,28 +2,31 @@ const { read, write } = require("../model/model");
 
 const products = {
   GET: (req, res) => {
-    const subcategory = read("products");
-    const { sub_category_id, model } = req.query;
+    try {
+      const subcategory = read("products");
+      const { sub_category_id, model } = req.query;
+      if (req.query.sub_category_id) {
+        const filter = subcategory.filter(
+          (user) => user.sub_category_id == sub_category_id
+        );
+        res.writeHead(201, { "Content-Type": "application/json" });
+        res.end(JSON.stringify(filter));
+      }
 
-    if (req.query.sub_category_id) {
-      const filter = subcategory.filter(
-        (user) => user.sub_category_id == sub_category_id
+      if (req.query.model) {
+        const filterbymodel = subcategory.filter((user) => user.model == model);
+        res.writeHead(201, { "Content-Type": "application/json" });
+        res.end(JSON.stringify(filterbymodel));
+      }
+
+      const filterbynamecategory = subcategory.filter(
+        (user) => user.sub_category_id == sub_category_id && user.model == model
       );
       res.writeHead(201, { "Content-Type": "application/json" });
-      res.end(JSON.stringify(filter));
+      res.end(JSON.stringify(filterbynamecategory));
+    } catch (error) {
+      res.json(400, { status: 400, message: error.message });
     }
-
-    if (req.query.model) {
-      const filterbymodel = subcategory.filter((user) => user.model == model);
-      res.writeHead(201, { "Content-Type": "application/json" });
-      res.end(JSON.stringify(filterbymodel));
-    }
-
-    // const filterbynamecategory = subcategory.filter(
-    //   (user) => user.sub_category_id == sub_category_id && user.model == model
-    // );
-    // res.writeHead(201, { "Content-Type": "application/json" });
-    // res.end(JSON.stringify(filterbynamecategory));
   },
   POST: async (req, res) => {
     try {
@@ -43,7 +46,7 @@ const products = {
       res.writeHead(201, { "Content-Type": "application/json" });
     } catch (error) {
       res.writeHead(400, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({ status: 400, message: error.message }));
+      res.json(400, { status: 400, message: error.message });
     }
   },
   PUT: async (req, res) => {
@@ -64,7 +67,20 @@ const products = {
       write("products", putcategory);
     } catch (error) {
       res.writeHead(400, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({ status: 400, message: error.message }));
+      res.json(400, { status: 400, message: error.message });
+    }
+  },
+  DELETE: async (req, res) => {
+    try {
+      const { product_id } = await req.body;
+      const categories = read("products");
+      const categoriesDel = categories.filter(
+        (categories) => categories.product_id != product_id
+      );
+      write("products", categoriesDel);
+      res.json(204, { status: 204, success: true });
+    } catch (error) {
+      res.json(400, { status: 400, message: error.message });
     }
   },
 };

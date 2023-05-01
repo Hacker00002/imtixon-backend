@@ -57,20 +57,5 @@
     "sub_category_id": 5,
     "color": "black",
     "price": 200
-  },
-  {
-    "product_id": 12,
-    "sub_category_id": 5,
-    "model": "a21s",
-    "product_name": "jndjndcjc",
-    "color": "black",
-    "price": 200
-  },
-  {
-    "product_id": 1,
-    "model": "jxwhsnwhs",
-    "color": "pink",
-    "price": 520,
-    "product_name": "lalla"
   }
 ]

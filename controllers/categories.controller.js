@@ -31,10 +31,11 @@ const categories = {
       };
       categories.push(newCategories);
       write("categories", categories);
-      res.writeHead(201, { "Content-Type": "application/json" });
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.json(200, { status: 200, success: true });
     } catch (error) {
       res.writeHead(400, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({ status: 400, message: error.message }));
+      res.json(400, { status: 400, message: error.message });
     }
   },
   PUT: async (req, res) => {
@@ -47,24 +48,20 @@ const categories = {
       putcategory.push({ category_id, category_name });
       putcategory.category_name = category_name || putcategory.category_name;
       write("categories", putcategory);
+      res.json(200, { status: 200, success: true });
     } catch (error) {
       res.writeHead(400, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({ status: 400, message: error.message }));
+      res.json(400, { status: 400, message: error.message });
     }
   },
   DELETE: async (req, res) => {
     try {
       const { category_id } = await req.body;
-
-      console.log(category_id);
       const categories = read("categories");
-      const categoriesDel = categories.findIndex(
-        (categories) => categories.category_id == category_id
+      const categoriesDel = categories.filter(
+        (categories) => categories.category_id != category_id
       );
-      if (categoriesDel == -1) {
-        throw new Error("Hello");
-      }
-      const [deletedCategories] = categories.splice(categoriesDel, 1);
+      write("categories", categoriesDel);
       res.json(204, { status: 204, success: true });
     } catch (error) {
       res.json(400, { status: 400, message: error.message });

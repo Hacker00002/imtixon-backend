@@ -22,10 +22,12 @@ function httpServer(req, res) {
   app.get("/subcategories", subcategories.GET);
   app.post("/add-subcategories", subcategories.POST);
   app.put("/edit-subcategories", subcategories.PUT);
+  app.delete("/delete-subcategories", subcategories.DELETE);
 
   app.get("/products", products.GET);
   app.post("/add-products", products.POST);
   app.put("/edit-products", products.PUT);
+  app.delete("/delete-products", products.DELETE);
 }
 
 http
